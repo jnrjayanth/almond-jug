@@ -3,7 +3,13 @@
 import { useChat } from '@ai-sdk/react';
 import { useMemo, useState } from 'react';
 import type { ChatMessage } from '@/lib/types';
+import dynamic from 'next/dynamic';
+import { waterFromTokens, formatMl, DISPLAY_CAPACITY_ML, ML_PER_GALLON } from '@/lib/water';
 
+const Jug3D = dynamic(() => import('@/components/Jug3D'), {
+  ssr: false,
+  loading: () => <div className="h-64" />,
+});
 export default function Page() {
   const [input, setInput] = useState('');
   const { messages, sendMessage, status, error } = useChat<ChatMessage>({
@@ -12,6 +18,7 @@ export default function Page() {
 
   // Session totals are derived from the usage attached to each reply.
   const totals = useMemo(() => {
+
     let queries = 0;
     let inputTokens = 0;
     let outputTokens = 0;
@@ -29,6 +36,11 @@ export default function Page() {
       totalTokens: inputTokens + outputTokens,
     };
   }, [messages]);
+
+  const water = waterFromTokens(totals.totalTokens);
+  const jugFillPercent = Math.min((water.central /ML_PER_GALLON) * 100, 100);
+  const gallonPercent = (water.central / ML_PER_GALLON) * 100;
+
 
   return (
     <main className="mx-auto flex h-screen max-w-4xl gap-4 p-4">
@@ -77,7 +89,18 @@ export default function Page() {
         </form>
       </section>
 
-      <aside className="w-56 shrink-0 rounded border p-4 text-sm">
+      <aside className="w-72 shrink-0 rounded border p-4 text-sm">
+       <Jug3D fillPercent={jugFillPercent} />
+       <div className="mb-4 text-center">
+        <div className="text-2xl font-semibold">{formatMl(water.central)}</div>
+        <div className="text-xs text-gray-500">
+          est. range {formatMl(water.low)} – {formatMl(water.high)}
+        </div>
+        <div className="mt-1 text-xs text-gray-500">
+          {gallonPercent.toFixed(3)}% of a one-gallon jug
+        </div>
+      </div>
+      
         <h2 className="mb-3 font-semibold">Session usage</h2>
         <dl className="space-y-2">
           <div className="flex justify-between">
