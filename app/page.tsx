@@ -4,7 +4,7 @@ import { useChat } from '@ai-sdk/react';
 import { useMemo, useState } from 'react';
 import type { ChatMessage } from '@/lib/types';
 import dynamic from 'next/dynamic';
-import { waterFromTokens, formatMl, DISPLAY_CAPACITY_ML, ML_PER_GALLON } from '@/lib/water';
+import { waterFromTokens, formatMl, ML_PER_GALLON } from '@/lib/water';
 
 const Jug3D = dynamic(() => import('@/components/Jug3D'), {
   ssr: false,
