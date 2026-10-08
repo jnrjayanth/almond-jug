@@ -109,10 +109,10 @@ function JugShell() {
         <meshStandardMaterial color="#d9534f" />
       </mesh>
       {/* Handle */}
-      <mesh position={[0.95, 1.85, 0]} rotation-z={0.15}>
+      {/* <mesh position={[0.95, 1.85, 0]} rotation-z={0.15}>
         <torusGeometry args={[0.32, 0.07, 16, 48]} />
         <meshStandardMaterial color="#cfe3f5" transparent opacity={0.6} />
-      </mesh>
+      </mesh> */}
     </group>
   );
 }
@@ -122,10 +122,10 @@ export default function Jug3D({ fillPercent }: { fillPercent: number }) {
   const plane = useMemo(() => new Plane(new Vector3(0, -1, 0), 0), []);
 
   return (
-    <div className="h-72 w-full">
+    <div className="h-56 w-full">
       <Canvas
         gl={{ localClippingEnabled: true }}
-        camera={{ position: [0, 0.6, 6], fov: 35 }}
+        camera={{ position: [0, 0.4, 5.4], fov: 35 }}
       >
         <ambientLight intensity={0.7} />
         <directionalLight position={[3, 5, 4]} intensity={1.3} />
