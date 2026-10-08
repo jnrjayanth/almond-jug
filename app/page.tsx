@@ -68,14 +68,24 @@ export default function Page() {
   }
 
   return (
-         <main className="relative flex h-screen w-full justify-center px-10 py-8">
+             <main className="relative flex h-dvh w-full justify-center px-4 py-4 sm:px-6 lg:px-10 lg:py-8">
       {/* Chat */}
-          <section className="flex h-full w-full max-w-3xl flex-col">
+        <section className="flex h-full w-full max-w-3xl flex-col lg:pr-72">
         <header className="mb-6">
           <h1 className="text-2xl font-semibold tracking-tight">Almond Jug</h1>
           <p className="text-sm text-gray-500">A chat that shows the water behind every answer.</p>
         </header>
-
+        <div className="mb-4 flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-3 lg:hidden">
+          <div className="h-20 w-20 shrink-0">
+            <Jug3D fillPercent={fillPercent} compact />
+          </div>
+          <div>
+            <div className="text-xl font-semibold tabular-nums">{formatMl(water.central)}</div>
+            <div className="text-xs text-gray-500">
+              {gallonPercent.toFixed(3)}% of a one-gallon jug · {totals.queries} queries
+            </div>
+          </div>
+        </div>
         <div className="flex-1 space-y-5 overflow-y-auto pr-2">
           {messages.length === 0 && (
             <p className="text-gray-500">
@@ -138,7 +148,11 @@ export default function Page() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
+              if (
+                e.key === 'Enter' &&
+                !e.shiftKey &&
+                window.matchMedia('(pointer: fine)').matches
+              ) {
                 e.preventDefault();
                 submit();
               }
@@ -180,7 +194,7 @@ export default function Page() {
 
       {/* Water panel */}
       {/* Water panel */}
-      <aside className="absolute right-10 top-8 w-64">
+      <aside className="absolute right-10 top-8 hidden w-64 lg:block">
         <div className="w-full rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <Jug3D fillPercent={fillPercent} />
 

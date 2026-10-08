@@ -117,12 +117,18 @@ function JugShell() {
   );
 }
 
-export default function Jug3D({ fillPercent }: { fillPercent: number }) {
+export default function Jug3D({
+  fillPercent,
+  compact = false,
+}: {
+  fillPercent: number;
+  compact?: boolean;
+}) {
   const fill = MathUtils.clamp(fillPercent / 100, 0, 1);
   const plane = useMemo(() => new Plane(new Vector3(0, -1, 0), 0), []);
 
   return (
-    <div className="h-56 w-full">
+    <div className={compact ? 'h-full w-full' : 'h-56 w-full'}>
       <Canvas
         gl={{ localClippingEnabled: true }}
         camera={{ position: [0, 0.4, 5.4], fov: 35 }}
@@ -134,7 +140,7 @@ export default function Jug3D({ fillPercent }: { fillPercent: number }) {
           <Water fill={fill} plane={plane} />
           <JugShell />
         </group>
-        <OrbitControls enableZoom={false} enablePan={false} />
+       {!compact && <OrbitControls enableZoom={false} enablePan={false} />}
       </Canvas>
     </div>
   );
