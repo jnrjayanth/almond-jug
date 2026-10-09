@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { useMemo, useRef, useState } from 'react';
 import type { ChatMessage } from '@/lib/types';
 import { waterFromTokens, formatMl, ML_PER_GALLON } from '@/lib/water';
+import SessionSummary from '@/components/SessionSummary';
 
 const Jug3D = dynamic(() => import('@/components/Jug3D'), {
   ssr: false,
@@ -19,9 +20,10 @@ export default function Page() {
   const [fileError, setFileError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { messages, sendMessage, status, error } = useChat<ChatMessage>({
+  const { messages, sendMessage, setMessages, status, error } = useChat<ChatMessage>({
     id: 'almond-chat',
   });
+  const [showSummary, setShowSummary] = useState(false);
   const busy = status !== 'ready';
 
   const totals = useMemo(() => {
@@ -71,9 +73,32 @@ export default function Page() {
              <main className="relative flex h-dvh w-full justify-center px-4 py-4 sm:px-6 lg:px-10 lg:py-8">
       {/* Chat */}
         <section className="flex h-full w-full max-w-3xl flex-col lg:pr-72">
-        <header className="mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight">Almond Jug</h1>
-          <p className="text-sm text-gray-500">A chat that shows the water behind every answer.</p>
+        {showSummary ? (
+          <SessionSummary
+            totals={totals}
+            water={water}
+            onBack={() => setShowSummary(false)}
+            onReset={() => {
+              setMessages([]);
+              setShowSummary(false);
+            }}
+          />
+        ) : (
+          <>
+         <header className="mb-6 flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">Almond Jug</h1>
+            <p className="text-sm text-gray-500">
+              A chat that shows the water behind every answer.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowSummary(true)}
+            disabled={totals.queries === 0}
+            className="shrink-0 rounded-full border border-gray-300 px-4 py-1.5 text-sm hover:bg-gray-50 disabled:opacity-40"
+          >
+            End session
+          </button>
         </header>
         <div className="mb-4 flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-3 lg:hidden">
           <div className="h-20 w-20 shrink-0">
@@ -190,11 +215,13 @@ export default function Page() {
             </button>
           </div>
         </form>
+                  </>
+        )}
       </section>
 
       {/* Water panel */}
       {/* Water panel */}
-      <aside className="absolute right-10 top-8 hidden w-64 lg:block">
+      <aside className={`absolute right-10 top-8 w-64 ${showSummary ? 'hidden' : 'hidden lg:block'}`}>
         <div className="w-full rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <Jug3D fillPercent={fillPercent} />
 
