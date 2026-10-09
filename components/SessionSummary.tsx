@@ -9,9 +9,16 @@ import {
   WATER_ML_PER_TOKEN,
   almondsFromMl,
   formatMl,
+  MODEL_ID,
   type WaterRange,
 } from '@/lib/water';
 
+import dynamic from 'next/dynamic';
+
+const Almond3D = dynamic(() => import('./Almond3D'), {
+  ssr: false,
+  loading: () => <div className="h-64" />,
+});
 type Totals = {
   queries: number;
   inputTokens: number;
@@ -44,9 +51,19 @@ export default function SessionSummary({
 
       {/* Headline */}
       <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-8 text-center">
-        <div className="text-5xl font-semibold tabular-nums">
-          {formatMl(water.central)}
+             <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-8">
+        <Almond3D fillPercent={almondFraction * 100} />
+        <div className="mt-4 text-center">
+          <div className="text-5xl font-semibold tabular-nums">
+            {(almondFraction * 100).toFixed(2)}%
+          </div>
+          <p className="mt-2 text-gray-600">of one California almond</p>
+          <p className="mt-3 text-sm text-gray-500">
+            {formatMl(water.central)} of water ·{' '}
+            {(gallonFraction * 100).toFixed(2)}% of a one-gallon jug
+          </p>
         </div>
+      </div>
         <p className="mt-2 text-sm text-gray-500">
           estimated water, {(gallonFraction * 100).toFixed(2)}% of a one-gallon jug
         </p>
@@ -56,8 +73,7 @@ export default function SessionSummary({
       <section className="mt-8">
         <h3 className="font-medium">In California almonds</h3>
         <p className="mt-2 text-gray-700">
-          Growing one California almond takes roughly 1.1 gallons of water. This
-          session used about{' '}
+           This session used about{' '}
           <strong className="tabular-nums">
             {(almondFraction * 100).toFixed(2)}%
           </strong>{' '}
@@ -107,6 +123,10 @@ export default function SessionSummary({
           per-query estimates differ by orders of magnitude, mostly because of
           what they count: on-site data-centre cooling alone, or the water used
           generating the electricity too.
+        </p>
+        
+        <p className="mt-3">
+          Model: <code className="rounded bg-gray-100 px-1.5 py-0.5">{MODEL_ID}</code>
         </p>
 
         <p className="mt-4">

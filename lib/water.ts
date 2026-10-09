@@ -6,7 +6,8 @@
  * whether a figure counts only on-site data-centre cooling, or also the
  * water consumed generating the electricity.
  */
-
+/** The exact model these figures are applied to. */
+export const MODEL_ID = 'mistral-small-2603';
 export type Scenario = 'onsite' | 'modern' | 'provider';
 
 export type WaterRange = { low: number; central: number; high: number };
@@ -59,7 +60,7 @@ export const ML_PER_GALLON = 3785.41;
 
 /** The model these estimates are applied to, for the methodology page. */
 export const MODEL_NOTE =
-  'Figures are applied to Mistral Small. The provider estimate was published for Mistral Large 2, a larger model, so it likely overstates this app.';
+  'Figures are applied to mistral-small-2603. Mistral published its estimate for Mistral Large 2, a larger, older model, so the figure likely overstates this app.';
 
 export function waterFromTokens(totalTokens: number): WaterRange {
   const perToken = Object.values(WATER_ML_PER_TOKEN);

@@ -68,7 +68,18 @@ export default function Page() {
     setInput('');
     clearFiles();
   }
-
+function friendlyError(err: Error): string {
+  try {
+    const parsed = JSON.parse(err.message);
+    if (typeof parsed?.error === 'string') return parsed.error;
+  } catch {
+    // not JSON, fall through
+  }
+  if (/rate limit|429/i.test(err.message)) {
+    return 'Too many messages at once. Wait a moment and try again.';
+  }
+  return 'Something went wrong. Try again in a moment.';
+}
   return (
              <main className="relative flex h-dvh w-full justify-center px-4 py-4 sm:px-6 lg:px-10 lg:py-8">
       {/* Chat */}
@@ -147,8 +158,10 @@ export default function Page() {
           ))}
         </div>
 
-        {error && <p className="mt-2 text-sm text-red-600">Something went wrong: {error.message}</p>}
-
+                {error && (
+          <p className="mt-2 text-sm text-red-600">{friendlyError(error)}</p>
+        )}
+        
         <form
           className="mt-4 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm focus-within:border-sky-400"
           onSubmit={(e) => {
