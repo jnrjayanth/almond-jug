@@ -83,7 +83,11 @@ function friendlyError(err: Error): string {
   return (
              <main className="relative flex h-dvh w-full justify-center px-4 py-4 sm:px-6 lg:px-10 lg:py-8">
       {/* Chat */}
-        <section className="flex h-full w-full max-w-3xl flex-col lg:pr-72">
+      <section
+        className={`flex h-full w-full max-w-3xl flex-col ${
+          showSummary ? '' : 'lg:pr-72'
+        }`}
+      >
         {showSummary ? (
           <SessionSummary
             totals={totals}
@@ -98,7 +102,7 @@ function friendlyError(err: Error): string {
           <>
          <header className="mb-6 flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Almond Jug</h1>
+              <h1 className="font-display text-[30px] tracking-tight">Almond Jug</h1>
             <p className="text-sm text-gray-500">
               A chat that shows the water behind every answer.
             </p>
@@ -161,7 +165,7 @@ function friendlyError(err: Error): string {
                 {error && (
           <p className="mt-2 text-sm text-red-600">{friendlyError(error)}</p>
         )}
-        
+
         <form
           className="mt-4 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm focus-within:border-sky-400"
           onSubmit={(e) => {

@@ -42,8 +42,8 @@ export default function SessionSummary({
   const perThousand = water.central * 1000;
 
   return (
-    <div className="mx-auto w-full max-w-2xl overflow-y-auto py-10">
-      <h2 className="text-2xl font-semibold tracking-tight">Session summary</h2>
+    <div className="mx-auto w-full overflow-y-auto py-10">
+      <h2 className="font-display text-[30px] tracking-tight">Session summary</h2>
       <p className="mt-1 text-sm text-gray-500">
         {totals.queries} {totals.queries === 1 ? 'query' : 'queries'} ·{' '}
         {totals.totalTokens.toLocaleString()} tokens
@@ -104,13 +104,13 @@ export default function SessionSummary({
       {/* Scale */}
       <section className="mt-8">
         <h3 className="font-medium">At scale</h3>
-        <p className="mt-2 text-gray-700">
+                <p className="mt-2 text-gray-700">
           One session is small. A thousand people having this same session would
           use about <strong>{formatMl(perThousand)}</strong>, or roughly{' '}
           <strong className="tabular-nums">
-            {almondsFromMl(perThousand, 'industry').toFixed(0)}
+            {almondsFromMl(perThousand, 'industry').toFixed(1)}
           </strong>{' '}
-          almonds&apos; worth of water.
+          California almonds&apos; worth of water.
         </p>
       </section>
 
